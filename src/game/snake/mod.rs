@@ -1,8 +1,8 @@
 pub mod direction;
 
 use crate::game::food::Food;
-use crate::window::grid_position::GridPosition;
-use crate::window::GRID_SIZE;
+use crate::screen::grid_position::GridPosition;
+use crate::screen::GRID_SIZE;
 use direction::Direction;
 use ggez::{graphics, Context, GameResult};
 use std::collections::LinkedList;

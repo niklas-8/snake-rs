@@ -1,6 +1,6 @@
 extern crate ggez;
 
-use crate::window::GRID_CELL_SIZE;
+use crate::screen::GRID_CELL_SIZE;
 use ggez::{graphics, Context};
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]

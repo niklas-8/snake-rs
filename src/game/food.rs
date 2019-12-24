@@ -1,8 +1,8 @@
 extern crate ggez;
 extern crate rand;
 
-use crate::window::grid_position::GridPosition;
-use crate::window::GRID_SIZE;
+use crate::screen::grid_position::GridPosition;
+use crate::screen::GRID_SIZE;
 use ggez::{graphics, Context, GameResult};
 use rand::{thread_rng, Rng};
 
