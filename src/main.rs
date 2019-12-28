@@ -1,5 +1,4 @@
 extern crate ggez;
-extern crate rand;
 
 mod args;
 mod game;
