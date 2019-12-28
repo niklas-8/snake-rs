@@ -1,6 +1,5 @@
 extern crate ggez;
 
-use crate::screen::GRID_CELL_SIZE;
 use ggez::{graphics, Context};
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
@@ -10,15 +9,20 @@ pub struct GridPosition {
 }
 
 impl GridPosition {
-    pub fn to_rect(&self, _ctx: &mut Context, color: graphics::Color) -> graphics::Mesh {
+    pub fn to_rect(
+        &self,
+        ctx: &mut Context,
+        color: graphics::Color,
+        grid_cell_size: (i16, i16),
+    ) -> graphics::Mesh {
         graphics::Mesh::new_rectangle(
-            _ctx,
+            ctx,
             graphics::DrawMode::fill(),
             graphics::Rect::new(
-                (self.x * GRID_CELL_SIZE.0) as f32,
-                (self.y * GRID_CELL_SIZE.1) as f32,
-                GRID_CELL_SIZE.0 as f32,
-                GRID_CELL_SIZE.1 as f32,
+                (self.x * grid_cell_size.0) as f32,
+                (self.y * grid_cell_size.1) as f32,
+                grid_cell_size.0 as f32,
+                grid_cell_size.1 as f32,
             ),
             color,
         )

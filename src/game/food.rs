@@ -1,30 +1,31 @@
 extern crate ggez;
 extern crate rand;
 
-use crate::screen::grid_position::GridPosition;
-use crate::screen::GRID_SIZE;
+use crate::grid_position::GridPosition;
 use ggez::{graphics, Context, GameResult};
 use rand::{thread_rng, Rng};
 
-const FOOD_COLOR: graphics::Color = graphics::Color::new(0.6, 0.8, 0.9, 1.0);
-
 pub struct Food {
     pub pos: GridPosition,
+    color: graphics::Color,
+    grid_cell_size: (i16, i16),
 }
 
 impl Food {
-    pub fn new() -> Self {
+    pub fn new(color: graphics::Color, grid_size: (i16, i16), grid_cell_size: (i16, i16)) -> Self {
         Food {
             pos: GridPosition {
-                x: thread_rng().gen_range(0, GRID_SIZE.0),
-                y: thread_rng().gen_range(0, GRID_SIZE.1),
+                x: thread_rng().gen_range(0, grid_size.0),
+                y: thread_rng().gen_range(0, grid_size.1),
             },
+            color,
+            grid_cell_size,
         }
     }
 
-    pub fn draw(&mut self, _ctx: &mut Context) -> GameResult<()> {
-        let rect = self.pos.to_rect(_ctx, FOOD_COLOR);
-        graphics::draw(_ctx, &rect, graphics::DrawParam::default())?;
+    pub fn draw(&mut self, ctx: &mut Context) -> GameResult<()> {
+        let rect = self.pos.to_rect(ctx, self.color, self.grid_cell_size);
+        graphics::draw(ctx, &rect, graphics::DrawParam::default())?;
         Ok(())
     }
 }
