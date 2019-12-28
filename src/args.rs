@@ -11,6 +11,7 @@ pub fn get_options() -> Result<Options, clap::Error> {
         .author(env!("CARGO_PKG_AUTHORS"))
         .arg(
             Arg::with_name("grid-width")
+                .short("w")
                 .long("grid-width")
                 .takes_value(true)
                 .value_name("NUMBER")
@@ -19,6 +20,7 @@ pub fn get_options() -> Result<Options, clap::Error> {
         )
         .arg(
             Arg::with_name("grid-height")
+                .short("h")
                 .long("grid-height")
                 .takes_value(true)
                 .value_name("NUMBER")
@@ -43,6 +45,7 @@ pub fn get_options() -> Result<Options, clap::Error> {
         )
         .arg(
             Arg::with_name("background-color")
+                .short("b")
                 .long("background-color")
                 .takes_value(true)
                 .value_name("COLOR")
@@ -51,6 +54,7 @@ pub fn get_options() -> Result<Options, clap::Error> {
         )
         .arg(
             Arg::with_name("snake-head-color")
+                .short("n")
                 .long("snake-head-color")
                 .takes_value(true)
                 .value_name("COLOR")
@@ -59,6 +63,7 @@ pub fn get_options() -> Result<Options, clap::Error> {
         )
         .arg(
             Arg::with_name("snake-body-color")
+                .short("s")
                 .long("snake-body-color")
                 .takes_value(true)
                 .value_name("COLOR")
@@ -67,6 +72,7 @@ pub fn get_options() -> Result<Options, clap::Error> {
         )
         .arg(
             Arg::with_name("food-color")
+                .short("f")
                 .long("food-color")
                 .takes_value(true)
                 .value_name("COLOR")
@@ -75,6 +81,7 @@ pub fn get_options() -> Result<Options, clap::Error> {
         )
         .arg(
             Arg::with_name("updates-per-second")
+                .short("u")
                 .long("updates-per-second")
                 .takes_value(true)
                 .value_name("NUMBER")
