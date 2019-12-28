@@ -19,8 +19,8 @@ fn main() {
         },
     }
     let window_size = screen::size();
-    let (ctx, event_loop) = &mut ContextBuilder::new("snake-rs", "niklas-8")
-        .window_setup(conf::WindowSetup::default().title("snake-rs"))
+    let (ctx, event_loop) = &mut ContextBuilder::new(env!("CARGO_PKG_NAME"), env!("CARGO_PKG_AUTHORS"))
+        .window_setup(conf::WindowSetup::default().title(env!("CARGO_PKG_NAME")))
         .window_mode(conf::WindowMode::default().dimensions(window_size.0, window_size.1))
         .build()
         .unwrap();
