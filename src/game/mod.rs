@@ -46,11 +46,11 @@ impl event::EventHandler for GameState {
         Ok(())
     }
 
-    fn draw(&mut self, _ctx: &mut Context) -> GameResult<()> {
-        graphics::clear(_ctx, BACKGROUND_COLOR);
-        self.snake.draw(_ctx)?;
-        self.food.draw(_ctx)?;
-        graphics::present(_ctx)?;
+    fn draw(&mut self, ctx: &mut Context) -> GameResult<()> {
+        graphics::clear(ctx, BACKGROUND_COLOR);
+        self.snake.draw(ctx)?;
+        self.food.draw(ctx)?;
+        graphics::present(ctx)?;
         Ok(())
     }
 
