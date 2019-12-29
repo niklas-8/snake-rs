@@ -2,7 +2,7 @@ extern crate clap;
 extern crate ggez;
 
 use crate::options::Options;
-use clap::{App, Arg};
+use clap::{App, Arg, ArgMatches};
 use ggez::graphics;
 
 pub fn get_options() -> Result<Options, clap::Error> {
@@ -90,59 +90,20 @@ pub fn get_options() -> Result<Options, clap::Error> {
         )
         .get_matches();
 
-    let grid_width;
-    match to_i16(matches.value_of("grid-width").unwrap()) {
-        Ok(v) => grid_width = v,
-        Err(e) => return Err(e),
-    }
+    let grid_width = arg_to_i16(&matches, "grid-width")?;
+    let grid_height = arg_to_i16(&matches, "grid-height")?;
+    let grid_cell_width = arg_to_i16(&matches, "grid-cell-width")?;
+    let grid_cell_height = arg_to_i16(&matches, "grid-cell-height")?;
 
-    let grid_height;
-    match to_i16(matches.value_of("grid-height").unwrap()) {
-        Ok(v) => grid_height = v,
-        Err(e) => return Err(e),
-    }
+    let background_color = arg_to_color(&matches, "background-color")?;
+    let snake_head_color = arg_to_color(&matches, "snake-head-color")?;
+    let snake_body_color = arg_to_color(&matches, "snake-body-color")?;
+    let food_color = arg_to_color(&matches, "food-color")?;
 
-    let grid_cell_width;
-    match to_i16(matches.value_of("grid-cell-width").unwrap()) {
-        Ok(v) => grid_cell_width = v,
+    let millis_per_update = match arg_to_i16(&matches, "updates-per-second") {
+        Ok(v) => (1.0 / v as f32 * 1000.0) as u64,
         Err(e) => return Err(e),
-    }
-
-    let grid_cell_height;
-    match to_i16(matches.value_of("grid-cell-height").unwrap()) {
-        Ok(v) => grid_cell_height = v,
-        Err(e) => return Err(e),
-    }
-
-    let background_color;
-    match to_color(matches.value_of("background-color").unwrap()) {
-        Ok(v) => background_color = v,
-        Err(e) => return Err(e),
-    }
-
-    let snake_head_color;
-    match to_color(matches.value_of("snake-head-color").unwrap()) {
-        Ok(v) => snake_head_color = v,
-        Err(e) => return Err(e),
-    }
-
-    let snake_body_color;
-    match to_color(matches.value_of("snake-body-color").unwrap()) {
-        Ok(v) => snake_body_color = v,
-        Err(e) => return Err(e),
-    }
-
-    let food_color;
-    match to_color(matches.value_of("food-color").unwrap()) {
-        Ok(v) => food_color = v,
-        Err(e) => return Err(e),
-    }
-
-    let millis_per_update;
-    match to_i16(matches.value_of("updates-per-second").unwrap()) {
-        Ok(v) => millis_per_update = (1.0 / v as f32 * 1000.0) as u64,
-        Err(e) => return Err(e),
-    }
+    };
 
     Ok(Options {
         grid_size: (grid_width, grid_height),
@@ -155,16 +116,41 @@ pub fn get_options() -> Result<Options, clap::Error> {
     })
 }
 
+fn get_invalid_number_error() -> clap::Error {
+    clap::Error::with_description(
+        "Unable to parse value. NUMBER must be an integer with 16 bits.",
+        clap::ErrorKind::InvalidValue,
+    )
+}
+
+fn arg_to_i16(matches: &ArgMatches, arg_name: &str) -> Result<i16, clap::Error> {
+    let value = match matches.value_of(arg_name) {
+        Some(v) => v,
+        None => return Err(get_invalid_number_error()),
+    };
+    to_i16(value)
+}
+
 fn to_i16(value: &str) -> Result<i16, clap::Error> {
     match value.parse::<i16>() {
         Ok(v) => return Ok(v),
-        Err(_) => {
-            return Err(clap::Error::with_description(
-                "Unable to parse value. NUMBER must be an integer with 16 bits.",
-                clap::ErrorKind::InvalidValue,
-            ))
-        }
+        Err(_) => return Err(get_invalid_number_error()),
     }
+}
+
+fn get_invalid_color_error() -> clap::Error {
+    clap::Error::with_description(
+        "Unable to parse value. COLOR must be in the format #RRGGBB",
+        clap::ErrorKind::InvalidValue,
+    )
+}
+
+fn arg_to_color(matches: &ArgMatches, arg_name: &str) -> Result<graphics::Color, clap::Error> {
+    let value = match matches.value_of(arg_name) {
+        Some(v) => v,
+        None => return Err(get_invalid_color_error()),
+    };
+    to_color(value)
 }
 
 fn to_color(hex_color: &str) -> Result<graphics::Color, clap::Error> {
@@ -174,13 +160,11 @@ fn to_color(hex_color: &str) -> Result<graphics::Color, clap::Error> {
     } else {
         hex_rgb = hex_color;
     }
+    if hex_rgb.len() != 6 {
+        return Err(get_invalid_color_error());
+    }
     match u32::from_str_radix(&hex_rgb, 16) {
         Ok(v) => return Ok(graphics::Color::from_rgb_u32(v)),
-        Err(_) => {
-            return Err(clap::Error::with_description(
-                "Unable to parse value. COLOR must be in the format #RRGGBB",
-                clap::ErrorKind::InvalidValue,
-            ))
-        }
+        Err(_) => return Err(get_invalid_color_error()),
     }
 }
