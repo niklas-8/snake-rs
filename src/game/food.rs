@@ -2,6 +2,8 @@ extern crate ggez;
 extern crate rand;
 
 use crate::grid_position::GridPosition;
+use crate::game::snake::Snake;
+use crate::game::snake::SnakeTile;
 use ggez::{graphics, Context, GameResult};
 use rand::{thread_rng, Rng};
 
@@ -12,12 +14,18 @@ pub struct Food {
 }
 
 impl Food {
-    pub fn new(color: graphics::Color, grid_size: (i16, i16), grid_cell_size: (i16, i16)) -> Self {
+    pub fn new(snake: &Snake, color: graphics::Color, grid_size: (i16, i16), grid_cell_size: (i16, i16)) -> Self {
+        let random_pos;
+        loop {
+            let x = thread_rng().gen_range(0, grid_size.0);
+            let y = thread_rng().gen_range(0, grid_size.1);
+            if !snake.tiles.contains(&SnakeTile::new(x, y)) {
+                random_pos = GridPosition { x, y };
+                break;
+            }
+        }
         Food {
-            pos: GridPosition {
-                x: thread_rng().gen_range(0, grid_size.0),
-                y: thread_rng().gen_range(0, grid_size.1),
-            },
+            pos: random_pos,
             color,
             grid_cell_size,
         }

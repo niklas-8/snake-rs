@@ -17,21 +17,24 @@ pub struct GameState {
 
 impl GameState {
     pub fn new(options: Options) -> Self {
+        let snake = Snake::new(
+            1,
+            1,
+            2,
+            options.snake_head_color,
+            options.snake_body_color,
+            options.grid_size,
+            options.grid_cell_size,
+        );
+
         GameState {
-            snake: Snake::new(
-                1,
-                1,
-                2,
-                options.snake_head_color,
-                options.snake_body_color,
-                options.grid_size,
-                options.grid_cell_size,
-            ),
             food: Food::new(
+                &snake,
                 options.food_color,
                 options.grid_size,
                 options.grid_cell_size,
             ),
+            snake,
             game_over: false,
             options,
         }
@@ -44,6 +47,7 @@ impl event::EventHandler for GameState {
         self.snake.update(&self.food);
         if self.snake.eaten_food > eaten_food_before {
             self.food = Food::new(
+                &self.snake,
                 self.options.food_color,
                 self.options.grid_size,
                 self.options.grid_cell_size,

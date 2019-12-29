@@ -7,7 +7,7 @@ use ggez::{graphics, Context, GameResult};
 use std::collections::LinkedList;
 
 pub struct Snake {
-    tiles: LinkedList<SnakeTile>,
+    pub tiles: LinkedList<SnakeTile>,
     pub dir: Direction,
     pub last_update_dir: Direction,
     pub ate_itself: bool,
@@ -85,12 +85,12 @@ impl Snake {
 }
 
 #[derive(PartialEq, Eq)]
-struct SnakeTile {
+pub struct SnakeTile {
     pos: GridPosition,
 }
 
 impl SnakeTile {
-    fn new(x: i16, y: i16) -> Self {
+    pub fn new(x: i16, y: i16) -> Self {
         SnakeTile {
             pos: GridPosition { x, y },
         }
